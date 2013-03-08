@@ -1,4 +1,4 @@
-zju-jwb-to-icalendar
+ZJU jwb to iCalendar
 ====================
 
-Convert ZJU jwbinfosys lessons into icalendar file.
+Convert ZJU jwbinfosys lessons into iCalendar file.
