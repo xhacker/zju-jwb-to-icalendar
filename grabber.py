@@ -166,7 +166,7 @@ class TeapotParser():
 
     def _setup(self):
         self._fetch_img()
-        with open(os.path.join(os.path.dirname(__file__), 'img.gif'), 'w') as img:
+        with open(os.path.join(os.path.dirname(__file__), 'captcha.gif'), 'w') as img:
             img.write(self.captcha_img)
 
         self.username = raw_input('Username: ')
