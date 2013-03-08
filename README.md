@@ -3,6 +3,8 @@ ZJU jwb to iCalendar
 
 Convert ZJU jwbinfosys lessons into iCalendar file.
 
+_iCalendar part is still under development, yaml is used currently._
+
 ## Usage
 0. `sudo pip install -r requirements.txt`
 1. `python grabber.py`
