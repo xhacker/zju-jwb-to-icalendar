@@ -9,8 +9,8 @@ from bs4 import BeautifulSoup, SoupStrainer
 from helpers import pretty_format, chinese_weekdays
 
 # data for fake login
-USERNAME = '3110000420'
-COOKIES = {'ASP.NET_SessionId': "0tnld555xsddoz45bxskg3jq"}
+USERNAME = ''
+COOKIES = {'ASP.NET_SessionId': ""}
 
 # weeks data ONLY FOR 2012-2013 second semester, should be updated every semester
 week_data = {
@@ -143,7 +143,6 @@ class TeapotParser():
                     try:
                         lessons[i]['location'] = locations[i]
                     except IndexError:
-                        # TODO: log
                         pass
         elif len(locations) == 1:
             '''lessons share the same location'''
@@ -210,7 +209,10 @@ class TeapotParser():
         self.cookies = r_login.cookies
 
     def run(self):
-        self._fake_login()
+        if USERNAME:
+            self._fake_login()
+        else:
+            self._login()
 
         url_course = self.url_prefix + "xskbcx.aspx?xh=" + self.username
         r_course = requests.get(url_course, cookies=self.cookies)
@@ -240,17 +242,16 @@ class TeapotParser():
                 'lessons': lessons,
             }
             courses.append(course)
-        self.courses = courses
-        return pretty_format(courses)
+        return courses
 
 if __name__ == "__main__":
     grabber = TeapotParser()
     try:
         response = grabber.run()
     except LoginError as e:
-        print e.error
+        print 'Login error: ' + e.error
     except:
         raise
     else:
-        with open(os.path.join(os.path.dirname(__file__), 'log.html'), 'w') as log:
-            log.write(response)
+        with open(os.path.join(os.path.dirname(__file__), 'dump.yaml'), 'w') as log:
+            log.write(pretty_format(response))
