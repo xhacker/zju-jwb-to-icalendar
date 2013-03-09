@@ -214,7 +214,7 @@ class TeapotParser():
         rows = soup.select("tr")
         courses = []
         for r in rows:
-            if 'class' in r and r['class'] == ["datagridhead"]:
+            if r.has_attr('class') and r['class'] == ["datagridhead"]:
                 continue
 
             cols = r.select("td")
