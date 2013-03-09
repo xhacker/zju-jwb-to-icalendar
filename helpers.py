@@ -15,11 +15,14 @@ chinese_weekdays = {
     u'天': 7,
 }
 
+
 def pretty_format(obj):
     return yaml.dump(obj, allow_unicode=True)
+
 
 def pretty_print(obj):
     print pretty_format(obj),
 
+
 def unify_brackets(text):
-    return re.sub(u'\((.{0,10})）', lambda(obj):u'（{0}）'.format(obj.group(1)), text)
+    return re.sub(u'\((.{0,10})）', lambda(obj): u'（{0}）'.format(obj.group(1)), text)

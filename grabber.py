@@ -16,6 +16,7 @@ from data import *
 USERNAME = ''
 COOKIES = {'ASP.NET_SessionId': ""}
 
+
 class LoginError(Exception):
     '''raise LoginError if error occurs in login process.
     '''
@@ -25,6 +26,7 @@ class LoginError(Exception):
     def __str__(self):
         return 'LoginError: {}'.format(self.error)
 
+
 class GrabError(Exception):
     '''raise GrabError if error occurs in grab process.
     '''
@@ -33,6 +35,7 @@ class GrabError(Exception):
 
     def __str__(self):
         return 'GrabError: {}'.format(self.error)
+
 
 class TeapotParser():
     """Parser for Zhejiang University.
@@ -141,8 +144,8 @@ class TeapotParser():
         lessons = sorted(lessons, key=lambda x: (x['day'], x['start']))
         for i in range(1, len(lessons)):
             if (lessons[i]['day'] == lessons[i - 1]['day'] and
-              lessons[i]['start'] == lessons[i - 1]['end'] + 1 and
-              lessons[i]['location'] == lessons[i - 1]['location']):
+               lessons[i]['start'] == lessons[i - 1]['end'] + 1 and
+               lessons[i]['location'] == lessons[i - 1]['location']):
                 lessons[i - 1]['end'] = lessons[i]['end']
                 lessons[i]['delete'] = True
         lessons = filter(lambda x: 'delete' not in x, lessons)
@@ -177,7 +180,8 @@ class TeapotParser():
         }
         r_login = requests.post(url_login, data=data, cookies=self.cookies)
 
-        result = re.match("<script language='javascript'>alert\('(.{,300})'\);</script>", r_login.content)
+        result = re.match(
+            "<script language='javascript'>alert\('(.{,300})'\);</script>", r_login.content)
         if result:
             msg = result.group(1).decode(self.charset)
             if msg == u"验证码不正确！！":
@@ -210,7 +214,7 @@ class TeapotParser():
         rows = soup.select("tr")
         courses = []
         for r in rows:
-            if r.has_key('class') and r['class'] == ["datagridhead"]:
+            if 'class' in r and r['class'] == ["datagridhead"]:
                 continue
 
             cols = r.select("td")
@@ -229,10 +233,11 @@ class TeapotParser():
             courses.append(course)
         return courses
 
+
 def gen_ical(courses):
     cal = Calendar()
     cal['version'] = '2.0'
-    cal['prodid'] = '-//Zhejiang University//LIU Dongyuan//ZH' # *mandatory elements* where the prodid can be changed, see RFC 5445
+    cal['prodid'] = '-//Zhejiang University//LIU Dongyuan//ZH'  # *mandatory elements* where the prodid can be changed, see RFC 5445
 
     for course in courses:
         for lesson in course['lessons']:
