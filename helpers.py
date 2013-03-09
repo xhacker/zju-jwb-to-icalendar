@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import yaml
+import re
 
 chinese_weekdays = {
     u'一': 1,
@@ -19,3 +20,6 @@ def pretty_format(obj):
 
 def pretty_print(obj):
     print pretty_format(obj),
+
+def unify_brackets(text):
+    return re.sub(u'\((.{0,10})）', lambda(obj):u'（{0}）'.format(obj.group(1)), text)

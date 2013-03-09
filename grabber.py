@@ -5,31 +5,16 @@ import requests
 import os.path
 import re
 import getpass
+from datetime import timedelta, datetime
 from bs4 import BeautifulSoup, SoupStrainer
-from helpers import pretty_format, chinese_weekdays
+from icalendar import Calendar, Event
+from uuid import uuid1
+from helpers import pretty_format, chinese_weekdays, unify_brackets
+from data import *
 
-# data for fake login
+# for fake login
 USERNAME = ''
 COOKIES = {'ASP.NET_SessionId': ""}
-
-# weeks data ONLY FOR 2012-2013 second semester, should be updated every semester
-week_data = {
-    u"春": {
-        "odd":  [1, 3, 5, 7],
-        "even": [2, 4, 6, 8],
-        "all":  [1, 2, 3, 4, 5, 6, 7, 8],
-    },
-    u"夏": {
-        "odd":  [10, 12, 14, 16],
-        "even": [11, 13, 15, 17],
-        "all":  [10, 11, 12, 13, 14, 15, 16, 17],
-    },
-    u"春夏": {
-        "odd":  [1, 3, 5, 7, 10, 12, 14, 16],
-        "even": [2, 4, 6, 8, 11, 13, 15, 17],
-        "all":  [1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17],
-    },
-}
 
 class LoginError(Exception):
     '''raise LoginError if error occurs in login process.
@@ -244,6 +229,30 @@ class TeapotParser():
             courses.append(course)
         return courses
 
+def gen_ical(courses):
+    cal = Calendar()
+    cal['version'] = '2.0'
+    cal['prodid'] = '-//Zhejiang University//LIU Dongyuan//ZH' # *mandatory elements* where the prodid can be changed, see RFC 5445
+
+    for course in courses:
+        for lesson in course['lessons']:
+            weeks = lesson['weeks']
+            for recur in weeks:
+                event = Event()
+                event.add('summary', unify_brackets(course['name']))
+                offset_days = lesson['day'] - 1 + 7 * (int(recur) - 1)
+                offset = timedelta(days=offset_days)
+                classdate = week_start + offset
+                start = lesson_time[lesson['start']]['start']
+                end = lesson_time[lesson['end']]['end']
+                event.add('dtstart', datetime.combine(classdate, start))
+                event.add('dtend', datetime.combine(classdate, end))
+                event.add('location', lesson['location'])
+                event.add('description', u'教师：' + course['teacher'])
+                event['uid'] = str(uuid1()) + '@ZJU'
+                cal.add_component(event)
+    return cal.to_ical()
+
 if __name__ == "__main__":
     grabber = TeapotParser()
     try:
@@ -255,3 +264,5 @@ if __name__ == "__main__":
     else:
         with open(os.path.join(os.path.dirname(__file__), 'dump.yaml'), 'w') as log:
             log.write(pretty_format(response))
+        with open(os.path.join(os.path.dirname(__file__), 'dump.ics'), 'w') as log:
+            log.write(gen_ical(response))
