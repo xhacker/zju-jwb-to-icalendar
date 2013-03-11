@@ -3,11 +3,10 @@ ZJU jwb to iCalendar
 
 Convert ZJU jwbinfosys lessons into iCalendar file.
 
-_iCalendar part is still under development, yaml is used currently._
-
 ## Usage
-0. `sudo pip install -r requirements.txt`
-1. `python grabber.py`
-2. Captcha will be saved as `captcha.gif`
-3. Enter username, password, and captcha
-4. Dumped yaml file will be saved as `dump.yaml`
+0. Install pip.
+1. `sudo pip install -r requirements.txt`
+2. `python grabber.py`
+3. Captcha will be saved as `captcha.gif`
+4. Enter username, password, and captcha
+5. Dumped yaml file will be saved as `dump.yaml`
