@@ -60,12 +60,6 @@ class TeapotParser():
         else:
             return None
 
-    def _fetch_img(self):
-        url_captcha = self.url_prefix + "CheckCode.aspx"
-        r = requests.get(url_captcha)
-        self.captcha_img = r.content
-        self.cookies = r.cookies
-
     @staticmethod
     def parse_odd_or_even(text):
         if u"单" in text:
@@ -153,13 +147,13 @@ class TeapotParser():
         return lessons
 
     def _setup(self):
-        self._fetch_img()
-        with open(os.path.join(os.path.dirname(__file__), 'captcha.gif'), 'w') as img:
-            img.write(self.captcha_img)
-
         self.username = raw_input('Username: ')
         self.password = getpass.getpass('Password: ')
-        self.captcha = raw_input('Captcha: ')
+
+    def _get_cookies(self):
+        url_default = self.url_prefix + "default2.aspx"
+        r_defaults = requests.get(url_default)
+        self.cookies = r_defaults.cookies
 
     def _fake_login(self):
         self.username = USERNAME
@@ -167,11 +161,12 @@ class TeapotParser():
 
     def _login(self):
         self._setup()
+        self._get_cookies()
         url_login = self.url_prefix + "default2.aspx"
         data = {
             'TextBox1': self.username,
             'TextBox2': self.password,
-            'Textbox3': self.captcha,
+            'Textbox3': "",
             'RadioButtonList1': u'学生'.encode(self.charset),
             '__EVENTTARGET': "Button1",
             '__EVENTARGUMENT': "",
@@ -271,3 +266,4 @@ if __name__ == "__main__":
             log.write(pretty_format(response))
         with open(os.path.join(os.path.dirname(__file__), 'dump.ics'), 'w') as log:
             log.write(gen_ical(response))
+        print "Dumped successfully."
