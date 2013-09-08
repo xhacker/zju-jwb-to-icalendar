@@ -175,7 +175,7 @@ class TeapotParser():
             'RadioButtonList1': u'学生'.encode(self.charset),
             '__EVENTTARGET': "Button1",
             '__EVENTARGUMENT': "",
-            '__VIEWSTATE': "dDwtMTAzMjcxNTk2NDs7Pl+gyMxRYhv1lADUeH98zifgfUbl",
+            '__VIEWSTATE': "dDwxOTEwMzI3NDAyOzs+hurYK255qc/CsDx7/bCGtJreiuI=",
             'Text1': "",
         }
         r_login = requests.post(url_login, data=data, cookies=self.cookies)
@@ -192,10 +192,10 @@ class TeapotParser():
                 raise LoginError("auth")
         content = r_login.content.decode(self.charset)
         if u"欢迎您来到现代教务管理系统！" not in content:
+            with open(os.path.join(os.path.dirname(__file__), 'error.html'), 'w') as log:
+                log.write(r_login.content)
             raise LoginError("unknown")
         print "Logged in successfully."
-
-        self.cookies = r_login.cookies
 
     def run(self):
         if USERNAME:
