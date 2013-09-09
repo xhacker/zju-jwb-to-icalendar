@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 import requests
 import os.path
 import re
@@ -16,6 +17,9 @@ from data import *
 USERNAME = ''
 COOKIES = {'ASP.NET_SessionId': ""}
 
+class _Misc(object):
+    pass
+_misc = _Misc()
 
 class LoginError(Exception):
     '''raise LoginError if error occurs in login process.
@@ -147,8 +151,10 @@ class TeapotParser():
         return lessons
 
     def _setup(self):
-        self.username = raw_input('Username: ')
-        self.password = getpass.getpass('Password: ')
+        #self.username = raw_input('Username: ')
+        #self.password = getpass.getpass('Password: ')
+        self.username = _misc.username
+        self.password = _misc.password
 
     def _get_cookies(self):
         url_default = self.url_prefix + "default2.aspx"
@@ -253,7 +259,17 @@ def gen_ical(courses):
                 cal.add_component(event)
     return cal.to_ical()
 
-if __name__ == "__main__":
+def main():
+    if len(sys.argv) < 3:
+        print('usage: %s username password [output_file]')
+        return
+    _misc.username = sys.argv[1]
+    _misc.password = sys.argv[2]
+    try: 
+        _misc.output_file = sys.argv[3]
+    except:
+        _misc.output_file = '%s.ics' %sys.argv[1]
+        
     grabber = TeapotParser()
     try:
         response = grabber.run()
@@ -262,8 +278,11 @@ if __name__ == "__main__":
     except:
         raise
     else:
-        with open(os.path.join(os.path.dirname(__file__), 'dump.yaml'), 'w') as log:
-            log.write(pretty_format(response))
-        with open(os.path.join(os.path.dirname(__file__), 'dump.ics'), 'w') as log:
+        #with open(os.path.join(os.path.dirname(__file__), 'dump.yaml'), 'w') as log:
+        #    log.write(pretty_format(response))
+        with open(os.path.join(os.path.dirname(__file__), _misc.output_file), 'w') as log:
             log.write(gen_ical(response))
         print "Dumped successfully."
+
+if __name__ == "__main__":
+    main()
