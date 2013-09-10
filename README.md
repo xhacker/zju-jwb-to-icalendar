@@ -12,13 +12,13 @@ ZJU jwb to iCalendar
 * http://zjujwbtools-starrify.rhcloud.com/ （被墙，请自行翻越）
 * http://zjujwbtools.starrybo.at/ （CNAME 到如上地址，没有被墙）
 
-### 本地使用
+你也可以自行部署到 OpenShift，详情：https://github.com/xhacker/zju-jwb-to-icalendar/pull/3 。
 
-0. 安装 pip
-1. `sudo pip install -r requirements.txt`
-2. `python grabber.py`
-4. 输入学号、密码
-5. 文件会导出到 `dump.ics` 和 `dump.yaml`
+### 命令行使用
+
+```bash
+./grabber.py username password [output_file]
+```
 
 ## 欢迎 Pull Request
 
