@@ -35,6 +35,5 @@ nosetests.xml
 .pydevproject
 
 # Misc
-dump.yaml
-dump.ics
-captcha.gif
+*.yaml
+*.ics
