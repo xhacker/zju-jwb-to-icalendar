@@ -28,6 +28,7 @@ week_data = {
     },
 }
 
+
 def time_shanghai(h, m):
     return time(h, m, tzinfo=timezone('Asia/Shanghai'))
 

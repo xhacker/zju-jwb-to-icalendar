@@ -5,21 +5,22 @@ import sys
 import requests
 import os.path
 import re
-import getpass
 from datetime import timedelta, datetime
 from bs4 import BeautifulSoup, SoupStrainer
 from icalendar import Calendar, Event
 from uuid import uuid1
-from helpers import pretty_format, chinese_weekdays, unify_brackets
+from helpers import chinese_weekdays, unify_brackets
 from data import *
 
 # for fake login
 USERNAME = ''
 COOKIES = {'ASP.NET_SessionId': ""}
 
+
 class _Misc(object):
     pass
 _misc = _Misc()
+
 
 class LoginError(Exception):
     '''raise LoginError if error occurs in login process.
@@ -176,7 +177,7 @@ class TeapotParser():
             'RadioButtonList1': u'学生'.encode(self.charset),
             '__EVENTTARGET': "Button1",
             '__EVENTARGUMENT': "",
-            '__VIEWSTATE': "dDwxOTEwMzI3NDAyOzs+hurYK255qc/CsDx7/bCGtJreiuI=",
+            '__VIEWSTATE': "dDwxNTc0MzA5MTU4Ozs+RGE82+DpWCQpVjFtEpHZ1UJYg8w=",
             'Text1': "",
         }
         r_login = requests.post(url_login, data=data, cookies=self.cookies)
@@ -259,17 +260,18 @@ def gen_ical(courses):
                 cal.add_component(event)
     return cal.to_ical()
 
+
 def main():
     if len(sys.argv) < 3:
         print('usage: %s username password [output_file]')
         return
     _misc.username = sys.argv[1]
     _misc.password = sys.argv[2]
-    try: 
+    try:
         _misc.output_file = sys.argv[3]
     except:
-        _misc.output_file = '%s.ics' %sys.argv[1]
-        
+        _misc.output_file = '%s.ics' % sys.argv[1]
+
     grabber = TeapotParser()
     try:
         response = grabber.run()
