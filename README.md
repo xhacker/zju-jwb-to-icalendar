@@ -3,6 +3,8 @@ ZJU jwb to iCalendar
 
 将浙江大学教务网课程导出为 iCalendar 文件（可用于 iCal、Google Calendar 等）。
 
+该项目已不再更新。您可以使用 [@zjuchenyuan](https://github.com/zjuchenyuan) 开发的新版本：[https://github.com/zjuchenyuan/zju-jwb-to-icalendar](https://github.com/zjuchenyuan/zju-jwb-to-icalendar)
+
 ## 使用方法
 
 ### 在线使用
